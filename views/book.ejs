@@ -1,0 +1,36 @@
+<%- include("_header") -%>
+
+<h1>리스트 목록 (<%= model.length %>)</h1>
+
+
+<div class="table-responsive-sm">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>제목</th>
+        <th>아이디</th>
+        <th>할말</th>
+        <th class="d-print-none">
+          <a class="btn btn-sm btn-success" href="/create">Add</a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const book of model) { %>
+        <tr>
+          <td><%= book.Title %></td>
+          <td><%= book.Author %></td>
+          <td><%= book.Comments %></td>
+          <td class="d-print-none">
+            <a class="btn btn-sm btn-warning" href="/edit/<%= book.Book_ID %>">Edit</a>
+            <a class="btn btn-sm btn-danger" href="/delete/<%= book.Book_ID %>">Delete</a>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+
+
+<%- include("_footer") -%>
