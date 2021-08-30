@@ -1,17 +1,17 @@
-// index.js
 
-const express = require("express"); // express module을 import한다는 의미
+// express module을 import한다는 의미
+const express = require("express"); 
 const ejs = require("ejs");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
 /* 
- * express server와 연결하기 전에 데이터베이스와 연결함
+ * express server와 연결하기 전에 데이터베이스와 연결함 
  * 데이터베이스는 data폴더에 apptest.db의 이름으로 저장됨.
  * 미리 data 폴더 만들기
  */ 
-const db_name = path.join(__dirname, "data", "apptest.db");
-const db = new sqlite3.Database(db_name, err => {
+const DB_NAME = path.join(__dirname, "data", "apptest.db");
+const db = new sqlite3.Database(DB_NAME, err => {
   if(err) {
     return console.error(err.message);
   }
@@ -29,7 +29,7 @@ const sql_create = `CREATE TABLE IF NOT EXISTS Books (
 
 // db.run : 첫번째 파라미터로 넘어온 sql query 실행, 그리고 두번째 파라미터인 callback함수 실행함
 db.run(sql_create, err => {
-  if( err ) {
+  if(err) {
     return console.error(err.message);
   }
   console.log("Successful creation of the 'Books' table!");
@@ -50,16 +50,22 @@ db.run(sql_insert, err => {
 
 */
 
+// Express server의 시작
+const app = express(); 
+const port = process.env.PORT || 5000;
 
-var app = express(); // Express server의 시작
-var port = process.env.PORT || 5000;
-
-
-app.set("view engine", "ejs"); // ejs 엔진을 사용한다고 선언하기
-// views들이 views 폴더에 저장됨을 설정
-app.set("views", path.join(__dirname, "views")); // app.set("views", __dirname + "/views"); 와 동일한 의미
-app.use(express.static(path.join(__dirname, "public"))); // css와 같은 static file들이 저장된 경로 설정
-app.use(express.urlencoded({extended: false})); // middleware configuration
+// ejs 엔진을 사용한다고 선언하기
+app.set("view engine", "html"); 
+app.engine('html', require('ejs').renderFile);
+/* 
+ * views들이 views 폴더에 저장됨을 설정
+ * app.set("views", __dirname + "/views"); 와 동일한 의미
+ */
+app.set("views", path.join(__dirname, "views"));
+// css와 같은 static file들이 저장된 경로 설정 
+app.use(express.static(path.join(__dirname, "public"))); 
+// middleware configuration
+app.use(express.urlencoded({extended: false})); 
 
 app.listen(port, function() {
   console.log("Server started (http://localhost:5000/) !");
@@ -68,8 +74,10 @@ app.listen(port, function() {
 // 첫번째 파라미터 "/"에 전달된 HTTP GET request에 응답
 app.get("/", (req, res) => {
   res.render("index");
-  // HTTP의 body부분에 텍스트를 반환함
-  // res.send ("Hello world...");
+/* 
+ * HTTP의 body부분에 텍스트를 반환함
+ * res.send ("Hello world...");
+ */
 });
 
 //function 추가
